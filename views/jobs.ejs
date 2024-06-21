@@ -1,7 +1,7 @@
 
 <section class="search-bar">
-            <form>
-                <input type="text" placeholder="Search keyword">
+            <form action="/search" method="post">
+                <input type="text" name="search" placeholder="Search keyword">
                 
                 <button type="submit" class="btn find-job">Find Job</button>
             </form>
@@ -27,7 +27,7 @@
             <div class="job-card">
                 <h3><%= job.title %></h3>
                 <p>Location: <%= job.location %></p>
-                <p>Created at: <%= job.createdAt %></p>
+                <p>Created at: <%= job.createdAt.toDateString() %></p>
             </div>
         <% }) %>
             <!-- Add more job cards as needed -->

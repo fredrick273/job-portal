@@ -38,6 +38,20 @@ router.post('/job/register', async (req, res) => {
     } catch(error){
         console.log(error)
     }
-})
+});
+
+
+router.post('/search', async (req, res) => {
+    const searchterm = req.body.search;
+
+    try{
+        const jobs = await Job.find({
+            title:{ $regex: new RegExp(searchterm,'i')}
+        });
+        res.render('jobs',{ jobs })
+    } catch(error){
+        console.log(error)
+    }
+});
 
 module.exports = router;
