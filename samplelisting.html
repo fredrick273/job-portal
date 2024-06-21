@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Jobs - Job Board</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #007BFF;
+    padding: 20px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo a {
+    font-size: 24px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.logo p {
+    color: #fff;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+nav ul li a:hover,
+nav ul li a.btn {
+    background-color: #28a745;
+    color: #fff;
+    border-radius: 5px;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background-color: #f0f2f5;
+    padding: 50px 20px;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.hero .content {
+    max-width: 600px;
+}
+
+.hero h1 {
+    font-size: 36px;
+    color: #007BFF;
+}
+
+.hero h2 {
+    font-size: 28px;
+    color: #333;
+    margin: 10px 0;
+}
+
+.hero p {
+    color: #666;
+    margin: 20px 0;
+}
+
+.hero .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #28a745;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.hero .btn.upload-resume {
+    background-color: #ff6b6b;
+}
+
+.image img {
+    max-width: 100%;
+    height: auto;
+}
+
+.search-bar {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 800px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.search-bar form {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.search-bar input {
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.search-bar .btn.find-job {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+footer {
+    background-color: #007BFF;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* ... previous CSS ... */
+
+.job-listings {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.job-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    width: calc(50% - 40px); /* Two cards in a row with some spacing */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.job-card h3 {
+    margin-bottom: 10px;
+    color: #007BFF;
+}
+
+.job-card p {
+    margin-bottom: 5px;
+    color: #666;
+}
+
+/* Adjust the search bar for the browse jobs page */
+.search-bar {
+    width: 100%;
+    max-width: 800px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="#">Job Board</a>
+                <p>Find your dream job.</p>
+            </div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Browse Job</a></li>
+                <li><a href="#">Pages</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Log In</a></li>
+                <li><a href="#" class="btn post-job">Post A Job</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="search-bar">
+            <form>
+                <input type="text" placeholder="Search keyword">
+                
+                <button type="submit" class="btn find-job">Find Job</button>
+            </form>
+        </section>
+        <section class="job-listings">
+            <div class="job-card">
+                <h3>Software Engineer</h3>
+                <p>Location: San Francisco, CA</p>
+                <p>Created at: 2023-06-01</p>
+            </div>
+            <div class="job-card">
+                <h3>Data Analyst</h3>
+                <p>Location: New York, NY</p>
+                <p>Created at: 2023-06-05</p>
+            </div>
+            <div class="job-card">
+                <h3>Product Manager</h3>
+                <p>Location: Los Angeles, CA</p>
+                <p>Created at: 2023-06-10</p>
+            </div>
+            <!-- Add more job cards as needed -->
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Job Board. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
