@@ -1,0 +1,53 @@
+<div class="card profile-card">
+    <h1>Profile of <%= applicant.email %></h1>
+    <p><strong>Full Name:</strong> <%= applicant.profile.fullName %></p>
+    <p><strong>Phone Number:</strong> <%= applicant.profile.phoneNumber %></p>
+    <p><strong>Address:</strong> <%= applicant.profile.address %></p>
+
+    <div class="card-section">
+        <h2>Education</h2>
+        <ul>
+            <% applicant.profile.education.forEach(edu => { %>
+                <li>
+                    <p><strong>Degree:</strong> <%= edu.degree %></p>
+                    <p><strong>Institution:</strong> <%= edu.institution %></p>
+                    <p><strong>Year of Completion:</strong> <%= edu.yearOfCompletion %></p>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+
+    <div class="card-section">
+        <h2>Experience</h2>
+        <ul>
+            <% applicant.profile.experience.forEach(exp => { %>
+                <li>
+                    <p><strong>Company:</strong> <%= exp.company %></p>
+                    <p><strong>Title:</strong> <%= exp.title %></p>
+                    <p><strong>Years:</strong> <%= exp.years %></p>
+                    <p><strong>Description:</strong> <%= exp.description %></p>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+
+    <div class="card-section">
+        <h2>Skills</h2>
+        <ul>
+            <% applicant.profile.skills.forEach(skill => { %>
+                <li><%= skill %></li>
+            <% }) %>
+        </ul>
+    </div>
+
+    <p><strong>Resume:</strong> <a href="<%= applicant.profile.resume %>">View Resume</a></p>
+
+    <div class="card-section">
+        <h2>Company Information</h2>
+        <p><strong>Company Name:</strong> <%= applicant.profile.companyName %></p>
+        <p><strong>Company Website:</strong> <a href="<%= applicant.profile.companyWebsite %>"><%= applicant.profile.companyWebsite %></a></p>
+        <p><strong>Company Description:</strong> <%= applicant.profile.companyDescription %></p>
+    </div>
+
+    <a href="/admin" class="btn btn-primary">Back to Jobs</a>
+</div>

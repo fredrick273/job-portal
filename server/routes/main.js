@@ -21,6 +21,11 @@ const upload = multer({ storage: storage });
 
 router.get("", (req, res) => {
     console.log(req.user);
+    if (req.isAuthenticated()){
+        if (req.user.email == 'admin@admin.com'){
+            return res.redirect('/admin')
+        }
+    }
     res.render("index");
 });
 
@@ -38,31 +43,31 @@ router.get('/job/:id', async (req, res) => {
     try {
         const job = await Job.findById(req.params.id);
         console.log(job);
-        res.send(job);
+        res.render('job-detail.ejs', { job })
     } catch (error) {
         console.log(error);
     }
 });
 
-router.get("/jobs/register", (req, res) => {
-    res.render("job");
-});
-
-router.post('/jobs/register', async (req, res) => {
+router.post('/job/:id/apply', checkAuthenticated, async (req, res) => {
     try {
-        const newJob = new Job({
-            title: req.body.name,
-            description: req.body.desc,
-            location: req.body.loc,
-            active: false,
-            type: "full-time"
-        });
-        await Job.create(newJob);
-        res.redirect('/');
+        const job = await Job.findById(req.params.id);
+        if (!job) {
+            return res.status(404).send("Job not found");
+        }
+        
+        if (!job.applicants.includes(req.user._id)) {
+            job.applicants.push(req.user._id);
+            await job.save();
+        }
+
+        res.send("Applied successfully");
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        res.status(500).send("Error applying for job");
     }
 });
+
 
 router.post('/search', async (req, res) => {
     const searchterm = req.body.search;
@@ -150,6 +155,91 @@ router.post('/profile', checkAuthenticated, upload.single('resume'), async (req,
     }
 });
 
+
+
+router.get("/admin", checkAdmin, async (req, res) => {
+
+    try {
+        const jobs = await Job.find();
+        res.render("admin/jobs", { jobs, layout: './layouts/admin-layout.ejs' },);
+    } catch (error) {
+        console.log(error);
+        res.redirect("/admin");
+    }
+});
+
+router.get("/admin/jobs/new", checkAdmin, (req, res) => {
+    res.render("admin/new-job",{ layout: './layouts/admin-layout.ejs' });
+});
+
+router.post("/admin/jobs/new", checkAdmin, async (req, res) => {
+    try {
+        const newJob = new Job({
+            title: req.body.name,
+            description: req.body.desc,
+            location: req.body.loc,
+            active: true,
+            type: "full-time"
+        });
+        await Job.create(newJob);
+        res.redirect("/admin");
+    } catch (error) {
+        console.log(error);
+        res.redirect("/admin/jobs/new");
+    }
+});
+
+router.get("/admin/jobs/edit/:id", checkAdmin, async (req, res) => {
+    try {
+        const job = await Job.findById(req.params.id);
+        res.render("admin/edit-job", { job ,layout: './layouts/admin-layout.ejs' });
+    } catch (error) {
+        console.log(error);
+        res.redirect("/admin");
+    }
+});
+
+router.post("/admin/jobs/edit/:id", checkAdmin, async (req, res) => {
+    try {
+        const active = req.body.active === 'on';
+        const job = await Job.findByIdAndUpdate(req.params.id, {
+            title: req.body.name,
+            description: req.body.desc,
+            location: req.body.loc,
+            active: active,
+            type: req.body.type
+        });
+        res.redirect("/admin");
+    } catch (error) {
+        console.log(error);
+        res.redirect(`/admin/jobs/edit/${req.params.id}`);
+    }
+});
+
+router.get("/admin/jobs/:id/applicants", checkAdmin, async (req, res) => {
+    try {
+        const job = await Job.findById(req.params.id).populate('applicants');
+        res.render("admin/view-applicants", { job, layout: './layouts/admin-layout.ejs' });
+    } catch (error) {
+        console.log(error);
+        res.redirect("/admin");
+    }
+});
+
+router.get("/admin/applicant/:id", checkAdmin, async (req, res) => {
+    try {
+        const applicant = await User.findById(req.params.id);
+        res.render("admin/view-applicant-profile", { applicant, layout: './layouts/admin-layout.ejs' });
+    } catch (error) {
+        console.log(error);
+        res.redirect("/admin/jobs");
+    }
+});
+
+
+
+
+
 function checkAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
@@ -162,6 +252,16 @@ function checkNotAuthenticated(req, res, next) {
         return res.redirect('/');
     }
     next();
+}
+
+
+function checkAdmin(req,res,next) {
+    if (req.isAuthenticated()){
+        if (req.user.email == 'admin@admin.com'){
+            return next()
+        }
+    }
+    res.redirect('/login');
 }
 
 module.exports = router;

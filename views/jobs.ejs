@@ -7,27 +7,14 @@
             </form>
         </section>
         <section class="job-listings">
-            <div class="job-card">
-                <h3>Software Engineer</h3>
-                <p>Location: San Francisco, CA</p>
-                <p>Created at: 2023-06-01</p>
-            </div>
-            <div class="job-card">
-                <h3>Data Analyst</h3>
-                <p>Location: New York, NY</p>
-                <p>Created at: 2023-06-05</p>
-            </div>
-            <div class="job-card">
-                <h3>Product Manager</h3>
-                <p>Location: Los Angeles, CA</p>
-                <p>Created at: 2023-06-10</p>
-            </div>
+            
 
         <% jobs.forEach(job => { %>
             <div class="job-card">
                 <h3><%= job.title %></h3>
                 <p>Location: <%= job.location %></p>
                 <p>Created at: <%= job.createdAt.toDateString() %></p>
+                <a href="/job/<%= job.id %>">View Details</a>
             </div>
         <% }) %>
             <!-- Add more job cards as needed -->

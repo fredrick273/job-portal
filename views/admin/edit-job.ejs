@@ -1,0 +1,28 @@
+<h1>Edit Job</h1>
+<form action="/admin/jobs/edit/<%= job._id %>" method="post">
+    <label for="name"> Name:
+        <input type="text" id="name" name="name" value="<%= job.title %>">
+    </label>
+    <br>
+    <label for="desc"> Description:
+        <input type="text" id="desc" name="desc" value="<%= job.description %>">
+    </label>
+    <br>
+    <label for="loc"> Location:
+        <input type="text" id="loc" name="loc" value="<%= job.location %>">
+    </label>
+    <br>
+    <label for="active"> Active:
+        <input type="checkbox" id="active" name="active" <%= job.active ? 'checked' : '' %>>
+    </label>
+    <br>
+    <label for="type"> Type:
+        <select id="type" name="type">
+            <option value="full-time" <%= job.type === 'full-time' ? 'selected' : '' %>>Full-Time</option>
+            <option value="part-time" <%= job.type === 'part-time' ? 'selected' : '' %>>Part-Time</option>
+            <option value="contract" <%= job.type === 'contract' ? 'selected' : '' %>>Contract</option>
+        </select>
+    </label>
+    <br>
+    <input type="submit">
+</form>

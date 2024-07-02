@@ -1,0 +1,21 @@
+
+<div class="card">
+    <h1>Jobs</h1>
+    <a class="btn btn-primary" href="/admin/jobs/new">Add New Job</a>
+    <ul class="job-list">
+        <% jobs.forEach(job => { %>
+            <li class="job-item">
+                <div>
+                    <h3><%= job.title %></h3>
+                    <p><%= job.description %></p>
+                    <p><strong>Location:</strong> <%= job.location %></p>
+                    <p><strong>Type:</strong> <%= job.type.charAt(0).toUpperCase() + job.type.slice(1) %></p>
+                </div>
+                <div class="job-actions">
+                    <a href="/admin/jobs/edit/<%= job._id %>" class="btn btn-secondary">Edit</a>
+                    <a href="/admin/jobs/<%= job._id %>/applicants" class="btn btn-secondary">Applicants</a>
+                </div>
+            </li>
+        <% }) %>
+    </ul>
+</div>

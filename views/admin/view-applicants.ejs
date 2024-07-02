@@ -1,0 +1,9 @@
+<h1>Applicants for <%= job.title %></h1>
+<ul>
+    <% job.applicants.forEach(applicant => { %>
+        <li>
+            <a href="/admin/applicant/<%= applicant._id %>"><%= applicant.email %></a>
+        </li>
+    <% }) %>
+</ul>
+<a href="/admin">Back to Jobs</a>
