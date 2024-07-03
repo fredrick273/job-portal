@@ -26,14 +26,16 @@ router.get("", (req, res) => {
             return res.redirect('/admin')
         }
     }
-    res.render("index");
+    const user = req.user;
+    res.render("index", { user });
 });
 
 router.get('/jobs', async (req, res) => {
     try {
         console.log(req.user);
         const jobs = await Job.find();
-        res.render('jobs.ejs', { jobs });
+        const user = req.user;
+        res.render('jobs.ejs', { jobs, user });
     } catch (error) {
         console.log(error);
     }
@@ -43,13 +45,14 @@ router.get('/job/:id', async (req, res) => {
     try {
         const job = await Job.findById(req.params.id);
         console.log(job);
-        res.render('job-detail.ejs', { job })
+        const user = req.user
+        res.render('job-detail.ejs', { job,user })
     } catch (error) {
         console.log(error);
     }
 });
 
-router.post('/job/:id/apply', checkAuthenticated, async (req, res) => {
+router.post('/apply/:id', checkAuthenticated, async (req, res) => {
     try {
         const job = await Job.findById(req.params.id);
         if (!job) {
@@ -76,14 +79,16 @@ router.post('/search', async (req, res) => {
         const jobs = await Job.find({
             title: { $regex: new RegExp(searchterm, 'i') }
         });
-        res.render('jobs', { jobs });
+        const user = req.user;
+        res.render('jobs', { jobs, user});
     } catch (error) {
         console.log(error);
     }
 });
 
 router.get('/login', async (req, res) => {
-    res.render('login.ejs');
+    const user = req.user;
+    res.render('login.ejs', {user});
 });
 
 router.post('/login', passport.authenticate('local', {
@@ -93,7 +98,8 @@ router.post('/login', passport.authenticate('local', {
 }));
 
 router.get('/register', async (req, res) => {
-    res.render('register.ejs');
+    const user = req.user;
+    res.render('register.ejs', {user});
 });
 
 router.post('/register', async (req, res) => {

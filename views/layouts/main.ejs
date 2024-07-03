@@ -4,15 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Board</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <%- include('../partials/header.ejs') %>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="/">Job Board</a>
+                <p>Find your dream job.</p>
+            </div>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/jobs">Browse Jobs</a></li>
+                <li><a href="#">Pages</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contact</a></li>
+                <% if (user) { %>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+                <% } else { %>
+                <li><a href="/login">Log In</a></li>
+                <li><a href="/register">Register</a></li>
+                <% } %>
+                <li><a href="#" class="btn post-job">Post A Job</a></li>
+            </ul>
+        </nav>
+    </header>
     
     <main>
         <%- body %>
     </main>
     
-    <%- include('../partials/footer.ejs') %>
+    <footer>
+        <p>&copy; 2024 Job Board. All Rights Reserved.</p>
+    </footer>
 </body>
 </html>
