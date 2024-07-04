@@ -19,15 +19,18 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.get("", (req, res) => {
+router.get("", async (req, res) => {
     console.log(req.user);
+    const jobs = await Job.find({
+        active: true
+    }).countDocuments();
     if (req.isAuthenticated()){
         if (req.user.email == 'admin@admin.com'){
             return res.redirect('/admin')
         }
     }
     const user = req.user;
-    res.render("index", { user });
+    res.render("index", { user, jobs });
 });
 
 router.get('/jobs', async (req, res) => {
@@ -125,27 +128,63 @@ router.get('/logout', (req, res) => {
     });
 });
 
+router.get('/checkstatus', checkAuthenticated, async (req,res) =>{
+    try{
+        const applicant = req.user.id;
+        const jobs = await Job.find();
+        let jobstatus = [];
+
+        jobs.forEach(j => {
+            if (j.applicants.includes(applicant)) {
+                let status;
+                if (j.accepted.includes(applicant)) {
+                    status = 'Accepted';
+                } else if (j.rejected.includes(applicant)) {
+                    status = 'Rejected';
+                } else {
+                    status = 'Pending';
+                }
+
+                jobstatus.push({
+                    title: j.title,
+                    id: j._id,
+                    location: j.location,
+                    status: status
+                });
+            }
+        });
+
+        res.render('jobstatus.ejs', {jobstatus, user: req.user})
+    } catch (error) {
+        console.log(error);
+        res.redirect("/")
+    }
+})
+
+
 router.get('/profile', checkAuthenticated, (req, res) => {
     res.render('profile.ejs', { user: req.user });
 });
 
 router.post('/profile', checkAuthenticated, upload.single('resume'), async (req, res) => {
     try {
+        const parseNestedFields = (prefix, obj) => {
+            return Object.keys(obj).reduce((acc, key) => {
+                if (key.startsWith(prefix)) {
+                    const [, index, field] = key.match(new RegExp(`^${prefix}\\[(\\d+)\\]\\.(.*)$`));
+                    acc[index] = acc[index] || {};
+                    acc[index][field] = obj[key];
+                }
+                return acc;
+            }, []);
+        };
+
         const updatedProfile = {
             fullName: req.body.fullName,
             phoneNumber: req.body.phoneNumber,
             address: req.body.address,
-            education: req.body.education ? req.body.education.map(edu => ({
-                degree: edu.degree,
-                institution: edu.institution,
-                yearOfCompletion: edu.yearOfCompletion
-            })) : [],
-            experience: req.body.experience ? req.body.experience.map(exp => ({
-                company: exp.company,
-                title: exp.title,
-                years: exp.years,
-                description: exp.description
-            })) : [],
+            education: parseNestedFields('education', req.body),
+            experience: parseNestedFields('experience', req.body),
             skills: req.body.skills ? req.body.skills.split(',') : [],
             resume: req.file ? req.file.path : req.user.profile.resume,
             companyName: req.body.companyName,
@@ -160,6 +199,7 @@ router.post('/profile', checkAuthenticated, upload.single('resume'), async (req,
         res.redirect('/profile');
     }
 });
+
 
 
 
@@ -235,10 +275,72 @@ router.get("/admin/jobs/:id/applicants", checkAdmin, async (req, res) => {
 router.get("/admin/applicant/:id", checkAdmin, async (req, res) => {
     try {
         const applicant = await User.findById(req.params.id);
-        res.render("admin/view-applicant-profile", { applicant, layout: './layouts/admin-layout.ejs' });
+        const jobs = await Job.find();
+        let jobdetails = [];
+
+        jobs.forEach(j => {
+            if (j.applicants.includes(req.params.id)) {
+                let status;
+                if (j.accepted.includes(req.params.id)) {
+                    status = 'Accepted';
+                } else if (j.rejected.includes(req.params.id)) {
+                    status = 'Rejected';
+                } else {
+                    status = 'Pending';
+                }
+
+                jobdetails.push({
+                    title: j.title,
+                    id: j._id,
+                    status: status
+                });
+            }
+        });
+
+        res.render("admin/view-applicant-profile", {
+            applicant,
+            jobdetails,
+            layout: './layouts/admin-layout.ejs'
+        });
     } catch (error) {
         console.log(error);
         res.redirect("/admin/jobs");
+    }
+});
+
+router.post("/admin/job/:id/accept", checkAdmin, async (req, res) => {
+    try {
+        const job = await Job.findById(req.params.id);
+        if (!job) {
+            return res.redirect("/admin");
+        }
+
+        job.accepted.push(req.body.applicantId);
+        
+        await job.save();
+
+        res.redirect(`/admin/applicant/${req.body.applicantId}`);
+    } catch (error) {
+        console.log(error);
+        res.redirect("/admin");
+    }
+});
+
+router.post("/admin/job/:id/reject", checkAdmin, async (req, res) => {
+    try {
+        const job = await Job.findById(req.params.id);
+        if (!job) {
+            return res.redirect("/admin");
+        }
+
+        job.rejected.push(req.body.applicantId);
+        
+        await job.save();
+
+        res.redirect(`/admin/applicant/${req.body.applicantId}`);
+    } catch (error) {
+        console.log(error);
+        res.redirect("/admin");
     }
 });
 

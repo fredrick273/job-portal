@@ -10,12 +10,15 @@
             
 
         <% jobs.forEach(job => { %>
-            <div class="job-card">
-                <h3><%= job.title %></h3>
-                <p>Location: <%= job.location %></p>
-                <p>Created at: <%= job.createdAt.toDateString() %></p>
-                <a href="/job/<%= job.id %>">View Details</a>
-            </div>
+            <% if (job.active) { %>
+                <div class="job-card">
+                    <h3><%= job.title %></h3>
+                    <p>Location: <%= job.location %></p>
+                    <p>Created at: <%= job.createdAt.toDateString() %></p>
+                    <a href="/job/<%= job.id %>">View Details</a>
+                </div>
+            <% } %>
+            
         <% }) %>
             <!-- Add more job cards as needed -->
         </section>

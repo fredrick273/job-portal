@@ -42,6 +42,7 @@ app.use(passport.session())
 connectDB();
 
 app.use("/", require('./server/routes/main'))
+app.use('/admin/applicant/uploads/', express.static('uploads'))
 
 
 

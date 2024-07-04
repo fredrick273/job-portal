@@ -1,8 +1,9 @@
 <div class="card profile-card">
-    <h1>Profile of <%= applicant.email %></h1>
+    <h1>Profile of <%= applicant.profile.fullName %></h1>
     <p><strong>Full Name:</strong> <%= applicant.profile.fullName %></p>
     <p><strong>Phone Number:</strong> <%= applicant.profile.phoneNumber %></p>
     <p><strong>Address:</strong> <%= applicant.profile.address %></p>
+    <p><strong>Email:</strong> <%= applicant.email %></p>
 
     <div class="card-section">
         <h2>Education</h2>
@@ -47,6 +48,38 @@
         <p><strong>Company Name:</strong> <%= applicant.profile.companyName %></p>
         <p><strong>Company Website:</strong> <a href="<%= applicant.profile.companyWebsite %>"><%= applicant.profile.companyWebsite %></a></p>
         <p><strong>Company Description:</strong> <%= applicant.profile.companyDescription %></p>
+    </div>
+
+    <div class="card-section">
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% jobdetails.forEach(job => { %>
+                    <tr>
+                        <td><a href="/jobs/<%= job.id %>"><%= job.title %></a></td>
+                        <td><%= job.status %></td>
+                        <td>
+                            <% if (job.status === 'Pending') { %>
+                                <form action="/admin/job/<%= job.id %>/accept" method="POST" style="display:inline;">
+                                    <input type="hidden" name="applicantId" value="<%= applicant._id %>">
+                                    <button type="submit" class="btn">Accept</button>
+                                </form>
+                                <form action="/admin/job/<%= job.id %>/reject" method="POST" style="display:inline;">
+                                    <input type="hidden" name="applicantId" value="<%= applicant._id %>">
+                                    <button type="submit" class="btn">Reject</button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
     </div>
 
     <a href="/admin" class="btn btn-primary">Back to Jobs</a>

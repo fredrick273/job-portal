@@ -1,0 +1,13 @@
+<section class="job-listings">
+            
+
+    <% jobstatus.forEach(job => { %>
+        <div class="job-card">
+            <h3><a href="/job/<%= job.id %>"></a><%= job.title %></a></h3>
+            <p>Location: <%= job.location %></p>
+            <p>Status: <%= job.status %></p>
+            
+        </div>
+    <% }) %>
+        <!-- Add more job cards as needed -->
+    </section>
